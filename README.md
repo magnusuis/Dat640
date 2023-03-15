@@ -1,5 +1,7 @@
 # Chat Widget
 
+[![npm version](https://img.shields.io/npm/v/iaigroup-chatwidget?style=flat)](https://www.npmjs.com/package/iaigroup-chatwidget)
+
 ## About
 
 This is a simple chat widget that can be embedded into any website. It is built with React and uses [Socket.io](https://socket.io/) for communication with the server.
@@ -9,14 +11,10 @@ This is a simple chat widget that can be embedded into any website. It is built 
 To use this widget, you need to have a server running. You can find instructions on how to set up the server [here](../README.md).
 Add the following code to your website:
 
-<!-- TODO change the path to the compiled files -->
-
 ```html
-<link rel="manifest" href="/iai-group/chatwidget/build/asset-manifest.json" />
-<link rel="stylesheet" href="/iai-group/chatwidget/build/static/css/main.css" />
 <script
   type="text/javascript"
-  src="/iai-group/chatwidget/build/static/js/main.js"
+  src="https://cdn.jsdelivr.net/npm/iaigroup-chatwidget@x.x.x/build/bundle.min.js"
 ></script>
 ```
 
@@ -32,7 +30,7 @@ There is configuration associated with the widget. You can pass it to the `initC
 | Attribute           | Description             | Default value                 |
 | ------------------- | ----------------------- | -----------------------       |
 | `data-name`         | Name of the chat bot    | `Chatbot`                     |
-| `data-server-url`   | URL of the server       | `http://127.0.0.1:5000/chat`  |
+| `data-server-url`   | URL of the server       | `http://127.0.0.1:5000`  |
 | `data-use-feedback` | Whether to use feedback | false                         |
 | `data-use-login`    | Whether to login users  | false                         |
 
@@ -42,7 +40,7 @@ Example usage:
 <div
   id="chatWidgetContainer"
   data-name="Chatbot"
-  data-server-url="http://127.0.0.1:5000/chat"
+  data-server-url="http://127.0.0.1:5000"
   data-use-feedback
   data-use-login
 ></div>
@@ -52,7 +50,7 @@ Example usage:
 <script>
   initChatWidget({
     name: "Chatbot",
-    serverUrl: "http://127.0.0.1:5000/chat",
+    serverUrl: "http://127.0.0.1:5000",
     useFeedback: true,
     useLogin: true,
   });

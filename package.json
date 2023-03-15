@@ -1,7 +1,6 @@
 {
   "name": "iaigroup-chatwidget",
   "version": "1.0.1",
-  "private": true,
   "homepage": "/build",
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.3.0",
