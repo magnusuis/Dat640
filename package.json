@@ -1,9 +1,8 @@
 {
-  "name": "chat-widget",
+  "name": "iaigroup-chatwidget",
   "version": "1.0.0",
   "private": true,
-  "homepage": "https://cdn.statically.io/gh/iai-group/ChatWidget/main/build",
-  "type": "module",
+  "homepage": "/build",
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.3.0",
     "@testing-library/jest-dom": "^5.16.5",
@@ -22,10 +21,13 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
+    "build": "npm run build:react && npm run build:bundle",
+    "build:react": "react-scripts build",
+    "build:bundle": "webpack --config webpack.prod.js",
     "start": "react-scripts start",
-    "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "release": "release-it"
   },
   "eslintConfig": {
     "extends": [
@@ -49,6 +51,17 @@
     "@types/fs-extra": "^11.0.1",
     "@types/node": "^18.14.2",
     "fs-extra": "^11.1.0",
-    "ts-node": "^10.9.1"
+    "react-app-rewired": "^2.2.1",
+    "release-it": "^15.8.0",
+    "ts-node": "^10.9.1",
+    "webpack-cli": "^5.0.1"
+  },
+  "files": [
+    "build/**/*"
+  ],
+  "release-it": {
+    "github": {
+      "release": true
+    }
   }
 }
