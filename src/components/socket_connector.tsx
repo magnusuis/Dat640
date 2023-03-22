@@ -3,7 +3,7 @@ import io, { Socket } from "socket.io-client";
 import { AgentMessage, UserMessage, ChatMessage } from "../types";
 
 export default function useSocketConnection(
-  url: string = "http://127.0.0.1:5000/chat",
+  url: string = "http://127.0.0.1:5000",
   makeNewConnection: boolean = false
 ) {
   const [socket, setSocket] = useState<Socket | null>(null);

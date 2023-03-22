@@ -73,7 +73,9 @@ export default function ChatBox({
   const handelMessage = useCallback(
     (message: ChatMessage) => {
       if (!!message.text) {
-        const image_url = message.attachment?.payload.url;
+        const image_url = message.attachments?.find(
+          (attachment) => attachment.type === "images"
+        )?.payload.images?.[0];
         updateMessages(
           <AgentChatMessage
             key={chatMessagesRef.current.length}
@@ -89,7 +91,9 @@ export default function ChatBox({
 
   const handleButtons = useCallback(
     (message: ChatMessage) => {
-      const buttons = message.attachment?.payload.buttons;
+      const buttons = message.attachments?.find(
+        (attachment) => attachment.type === "buttons"
+      )?.payload.buttons;
       if (!!buttons && buttons.length > 0) {
         setChatButtons(
           buttons.map((button, index) => {

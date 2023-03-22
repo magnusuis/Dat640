@@ -6,7 +6,7 @@ import { Config } from "../types";
 test("renders learn react link", () => {
   const config: Config = {
     name: "Chatbot",
-    serverUrl: "http://localhost:5000/chat",
+    serverUrl: "http://localhost:5000",
     useFeedback: false,
     useLogin: false,
   };

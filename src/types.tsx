@@ -14,13 +14,13 @@ export type ChatMessageButton = {
 export type ChatMessageAttachment = {
   type: string;
   payload: {
-    url?: string;
+    images?: string[];
     buttons?: ChatMessageButton[];
   };
 };
 
 export type ChatMessage = {
-  attachment?: ChatMessageAttachment;
+  attachments?: ChatMessageAttachment[];
   text?: string;
   intent?: string;
 };

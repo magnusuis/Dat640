@@ -27,7 +27,7 @@ const initChatWidget = (
     serverUrl:
       config?.serverUrl ||
       widgetContainer?.getAttribute("data-server-url") ||
-      "http://127.0.0.1:5000/chat",
+      "http://127.0.0.1:5000/",
     useFeedback:
       config?.useFeedback ?? widgetContainer?.hasAttribute("data-use-feedback"),
     useLogin:
