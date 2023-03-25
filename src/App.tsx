@@ -7,7 +7,11 @@ import { Config } from "./types";
 
 export default function App(props: Config) {
   const [isChatBoxOpen, setIsChatBoxOpen] = useState<boolean>(false);
-  const connector = useSocketConnection(props.serverUrl, isChatBoxOpen);
+  const connector = useSocketConnection(
+    props.serverUrl,
+    props.socketioPath,
+    isChatBoxOpen
+  );
 
   function handleClick(event: MouseEvent<HTMLAnchorElement>) {
     setIsChatBoxOpen(isChatBoxOpen ? false : true);

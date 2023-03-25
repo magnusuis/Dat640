@@ -3,6 +3,7 @@ export type Config = {
   serverUrl: string | undefined;
   useFeedback: boolean | undefined;
   useLogin: boolean | undefined;
+  socketioPath?: string | undefined;
 };
 
 export type ChatMessageButton = {

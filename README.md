@@ -31,6 +31,7 @@ There is configuration associated with the widget. You can pass it to the `initC
 | ------------------- | ----------------------- | -----------------------       |
 | `data-name`         | Name of the chat bot    | `Chatbot`                     |
 | `data-server-url`   | URL of the server       | `http://127.0.0.1:5000`  |
+| `data-socketio-path`   | Path on the server       | `/socket.io/`  |
 | `data-use-feedback` | Whether to use feedback | false                         |
 | `data-use-login`    | Whether to login users  | false                         |
 

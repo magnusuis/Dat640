@@ -4,6 +4,7 @@ import { AgentMessage, UserMessage, ChatMessage } from "../types";
 
 export default function useSocketConnection(
   url: string = "http://127.0.0.1:5000",
+  path: string | undefined,
   makeNewConnection: boolean = false
 ) {
   const [socket, setSocket] = useState<Socket | null>(null);
@@ -15,7 +16,10 @@ export default function useSocketConnection(
     if (!makeNewConnection) {
       return;
     }
-    const newSocket = io(url);
+    console.log("Making new connection");
+    console.log(url);
+    console.log(path);
+    const newSocket = io(url, { path: path });
     setSocket(newSocket);
 
     newSocket.on("connect", () => {

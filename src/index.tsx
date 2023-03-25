@@ -28,6 +28,10 @@ const initChatWidget = (
       config?.serverUrl ||
       widgetContainer?.getAttribute("data-server-url") ||
       "http://127.0.0.1:5000/",
+    socketioPath:
+      config?.socketioPath ||
+      widgetContainer?.getAttribute("data-socketio-path") ||
+      undefined,
     useFeedback:
       config?.useFeedback ?? widgetContainer?.hasAttribute("data-use-feedback"),
     useLogin:
