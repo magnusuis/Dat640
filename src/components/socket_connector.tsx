@@ -16,9 +16,6 @@ export default function useSocketConnection(
     if (!makeNewConnection) {
       return;
     }
-    console.log("Making new connection");
-    console.log(url);
-    console.log(path);
     const newSocket = io(url, { path: path });
     setSocket(newSocket);
 
