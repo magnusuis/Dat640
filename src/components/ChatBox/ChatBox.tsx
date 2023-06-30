@@ -1,7 +1,7 @@
 import "./ChatBox.css";
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import QuickReplyButton from "./QuickReply";
+import QuickReplyButton from "../QuickReply";
 
 import {
   MDBCard,
@@ -10,31 +10,27 @@ import {
   MDBIcon,
   MDBCardFooter,
 } from "mdb-react-ui-kit";
-import { AgentChatMessage, UserChatMessage } from "./ChatMessage";
-import { ChatMessage } from "../types";
+import { AgentChatMessage, UserChatMessage } from "../ChatMessage";
+import { ChatMessage } from "../../types";
+import useSocketConnection from "../socket_connector";
 
 export default function ChatBox({
   name,
-  onClose,
-  connector,
   use_feedback,
+  serverUrl,
+  socketioPath,
 }: {
   name: string;
-  onClose: (event: React.MouseEvent<HTMLAnchorElement>) => void;
-  connector: {
-    sendMessage: (message: { message: string }) => void;
-    quickReply: (message: { message: string }) => void;
-    giveFeedback: (message: string, event: string) => void;
-    onMessage: (callback: (response: ChatMessage) => void) => void;
-    onRestart: (callback: () => void) => void;
-  };
   use_feedback: boolean;
+  serverUrl: string | undefined;
+  socketioPath: string | undefined;
 }) {
   const [chatMessages, setChatMessages] = useState<JSX.Element[]>([]);
   const [chatButtons, setChatButtons] = useState<JSX.Element[]>([]);
   const [inputValue, setInputValue] = useState<string>("");
   const chatMessagesRef = useRef(chatMessages);
   const inputRef = useRef<HTMLInputElement>(null);
+  const connector = useSocketConnection(serverUrl, socketioPath);
 
   const updateMessages = (message: JSX.Element) => {
     chatMessagesRef.current = [...chatMessagesRef.current, message];
@@ -129,47 +125,46 @@ export default function ChatBox({
   }, [connector]);
 
   return (
-    <MDBCard
-      id="chatBox"
-      className="chat-widget-card"
-      style={{ borderRadius: "15px" }}
-    >
-      <MDBCardHeader
-        className="d-flex justify-content-between align-items-center p-3 bg-info text-white border-bottom-0"
-        style={{
-          borderTopLeftRadius: "15px",
-          borderTopRightRadius: "15px",
-        }}
+    <div className="chat-widget-content">
+      <MDBCard
+        id="chatBox"
+        className="chat-widget-card"
+        style={{ borderRadius: "15px" }}
       >
-        <p className="mb-0 fw-bold">{name}</p>
-        <a href="#!" onClick={onClose} style={{ color: "white" }}>
-          <MDBIcon fas icon="angle-down" />
-        </a>
-      </MDBCardHeader>
+        <MDBCardHeader
+          className="d-flex justify-content-between align-items-center p-3 bg-info text-white border-bottom-0"
+          style={{
+            borderTopLeftRadius: "15px",
+            borderTopRightRadius: "15px",
+          }}
+        >
+          <p className="mb-0 fw-bold">{name}</p>
+        </MDBCardHeader>
 
-      <MDBCardBody>
-        <div className="card-body-messages">
-          {chatMessages}
-          <div className="d-flex flex-wrap justify-content-between">
-            {chatButtons}
+        <MDBCardBody>
+          <div className="card-body-messages">
+            {chatMessages}
+            <div className="d-flex flex-wrap justify-content-between">
+              {chatButtons}
+            </div>
           </div>
-        </div>
-      </MDBCardBody>
-      <MDBCardFooter className="text-muted d-flex justify-content-start align-items-center p-2">
-        <form className="d-flex flex-grow-1" onSubmit={handleInput}>
-          <input
-            type="text"
-            className="form-control form-control-lg"
-            id="ChatInput"
-            onChange={(e) => setInputValue(e.target.value)}
-            placeholder="Type message"
-            ref={inputRef}
-          ></input>
-          <button type="submit" className="btn btn-link text-muted">
-            <MDBIcon fas size="2x" icon="paper-plane" />
-          </button>
-        </form>
-      </MDBCardFooter>
-    </MDBCard>
+        </MDBCardBody>
+        <MDBCardFooter className="text-muted d-flex justify-content-start align-items-center p-2">
+          <form className="d-flex flex-grow-1" onSubmit={handleInput}>
+            <input
+              type="text"
+              className="form-control form-control-lg"
+              id="ChatInput"
+              onChange={(e) => setInputValue(e.target.value)}
+              placeholder="Type message"
+              ref={inputRef}
+            ></input>
+            <button type="submit" className="btn btn-link text-muted">
+              <MDBIcon fas size="2x" icon="paper-plane" />
+            </button>
+          </form>
+        </MDBCardFooter>
+      </MDBCard>
+    </div>
   );
 }

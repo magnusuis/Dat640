@@ -19,7 +19,7 @@ min-height: 170px;
 transition: all 0.3s ease-in-out;
 }
 
-.chat-widget-box .card-body{
+.chat-widget-content .card-body{
  overflow-y: auto;
  max-height: 450px;
  display: flex;
@@ -36,6 +36,7 @@ border: 1px solid #eee;
 box-shadow: 0 0 10px rgba(0,0,0,0.2);
 transition: all 0.3s ease;
 }
+
 .chat-widget-icon i{
 font-size: 40px;
 line-height: 75px;

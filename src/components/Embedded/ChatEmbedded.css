@@ -1,0 +1,6 @@
+.chat-widget-content .card-body{
+    overflow-y: auto;
+    max-height: 500px;
+    display: flex;
+    flex-direction: column-reverse;
+   }

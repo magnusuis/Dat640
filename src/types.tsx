@@ -3,6 +3,7 @@ export type Config = {
   serverUrl: string | undefined;
   useFeedback: boolean | undefined;
   useLogin: boolean | undefined;
+  useWidget?: boolean | undefined;
   socketioPath?: string | undefined;
 };
 

@@ -4,8 +4,7 @@ import { AgentMessage, UserMessage, ChatMessage } from "../types";
 
 export default function useSocketConnection(
   url: string = "http://127.0.0.1:5000",
-  path: string | undefined,
-  makeNewConnection: boolean = false
+  path: string | undefined
 ) {
   const [socket, setSocket] = useState<Socket | null>(null);
   const [isConnected, setIsConnected] = useState(false);
@@ -13,9 +12,6 @@ export default function useSocketConnection(
   const onRestartRef = useRef<() => void>();
 
   useEffect(() => {
-    if (!makeNewConnection) {
-      return;
-    }
     const newSocket = io(url, { path: path });
     setSocket(newSocket);
 
@@ -43,7 +39,7 @@ export default function useSocketConnection(
     return () => {
       newSocket.disconnect();
     };
-  }, [url, makeNewConnection]);
+  }, [url, path]);
 
   const sendMessage = (message: UserMessage) => {
     socket?.emit("message", message);

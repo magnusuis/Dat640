@@ -14,7 +14,7 @@ Add the following code to your website:
 ```html
 <script
   type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/iaigroup-chatwidget@x.x.x/build/bundle.min.js"
+  src="https://cdn.jsdelivr.net/npm/iaigroup-chatwidget@latest/build/bundle.min.js"
 ></script>
 ```
 
@@ -66,7 +66,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ### Available Scripts
 
-To install all necessary packages, run:
+To install all necessary packages, run the following command:
 
 ```bash
 npm install
@@ -74,7 +74,7 @@ npm install
 
 This should generate `node_modules` folder.
 
-To run the app in the development mode, use:
+To run the app in the development mode, use the following command:
 
 ```bash
 npm start
@@ -99,7 +99,7 @@ npm run build
 Builds the app for production to the `build` folder.\
 It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.\
+The build is minified, and the filenames include the hashes.\
 Your app is ready to be deployed!
 
 **NB! Remember to change the path to the compiled files you just built in the `index.html` file.**

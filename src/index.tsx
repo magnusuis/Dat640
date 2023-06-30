@@ -36,6 +36,8 @@ const initChatWidget = (
       config?.useFeedback ?? widgetContainer?.hasAttribute("data-use-feedback"),
     useLogin:
       config?.useLogin ?? widgetContainer?.hasAttribute("data-use-login"),
+    useWidget:
+      config?.useWidget ?? widgetContainer?.hasAttribute("data-use-widget"),
   };
 
   if (!root) {
