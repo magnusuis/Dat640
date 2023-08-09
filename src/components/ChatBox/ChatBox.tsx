@@ -1,8 +1,15 @@
 import "./ChatBox.css";
 
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  useContext,
+} from "react";
 import QuickReplyButton from "../QuickReply";
-
+import { useSocket } from "../../contexts/SocketContext";
+import { UserContext } from "../../contexts/UserContext";
 import {
   MDBCard,
   MDBCardHeader,
@@ -12,25 +19,28 @@ import {
 } from "mdb-react-ui-kit";
 import { AgentChatMessage, UserChatMessage } from "../ChatMessage";
 import { ChatMessage } from "../../types";
-import useSocketConnection from "../socket_connector";
+import { ConfigContext } from "../../contexts/ConfigContext";
 
-export default function ChatBox({
-  name,
-  use_feedback,
-  serverUrl,
-  socketioPath,
-}: {
-  name: string;
-  use_feedback: boolean;
-  serverUrl: string | undefined;
-  socketioPath: string | undefined;
-}) {
+export default function ChatBox() {
+  const { config } = useContext(ConfigContext);
+  const { user } = useContext(UserContext);
+  const {
+    startConversation,
+    sendMessage,
+    quickReply,
+    onMessage,
+    onRestart,
+    giveFeedback,
+  } = useSocket();
   const [chatMessages, setChatMessages] = useState<JSX.Element[]>([]);
   const [chatButtons, setChatButtons] = useState<JSX.Element[]>([]);
   const [inputValue, setInputValue] = useState<string>("");
   const chatMessagesRef = useRef(chatMessages);
   const inputRef = useRef<HTMLInputElement>(null);
-  const connector = useSocketConnection(serverUrl, socketioPath);
+
+  useEffect(() => {
+    startConversation();
+  }, [startConversation]);
 
   const updateMessages = (message: JSX.Element) => {
     chatMessagesRef.current = [...chatMessagesRef.current, message];
@@ -46,7 +56,7 @@ export default function ChatBox({
         message={inputValue}
       />
     );
-    connector.sendMessage({ message: inputValue });
+    sendMessage({ message: inputValue });
     setInputValue("");
     if (inputRef.current) {
       inputRef.current.value = "";
@@ -61,9 +71,9 @@ export default function ChatBox({
           message={message}
         />
       );
-      connector.quickReply({ message: message });
+      quickReply({ message: message });
     },
-    [connector, chatMessagesRef]
+    [chatMessagesRef, quickReply]
   );
 
   const handelMessage = useCallback(
@@ -75,14 +85,14 @@ export default function ChatBox({
         updateMessages(
           <AgentChatMessage
             key={chatMessagesRef.current.length}
-            feedback={use_feedback ? connector.giveFeedback : null}
+            feedback={config.useFeedback ? giveFeedback : null}
             message={message.text}
             image_url={image_url}
           />
         );
       }
     },
-    [connector, chatMessagesRef, use_feedback]
+    [giveFeedback, chatMessagesRef, config]
   );
 
   const handleButtons = useCallback(
@@ -111,18 +121,18 @@ export default function ChatBox({
   );
 
   useEffect(() => {
-    connector.onMessage((message: ChatMessage) => {
+    onMessage((message: ChatMessage) => {
       handelMessage(message);
       handleButtons(message);
     });
-  }, [connector, handleButtons, handelMessage]);
+  }, [onMessage, handleButtons, handelMessage]);
 
   useEffect(() => {
-    connector.onRestart(() => {
+    onRestart(() => {
       setChatMessages([]);
       setChatButtons([]);
     });
-  }, [connector]);
+  }, [onRestart]);
 
   return (
     <div className="chat-widget-content">
@@ -138,7 +148,8 @@ export default function ChatBox({
             borderTopRightRadius: "15px",
           }}
         >
-          <p className="mb-0 fw-bold">{name}</p>
+          <p className="mb-0 fw-bold">{config.name}</p>
+          <p className="mb-0 fw-bold">{user?.username}</p>
         </MDBCardHeader>
 
         <MDBCardBody>
