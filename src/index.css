@@ -6,9 +6,23 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-family: Roboto, Helvetica, Arial, sans-serif;
+  display: flex;
+  padding: 40px;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.playlistSection {
+  width: 60%;
+  height: calc(100vh - 80px);
+}
+.chatSection {
+  width: 40%;
+  height: calc(100vh - 80px);
+}
+.card-body {
+  min-height: 60vh;
 }

@@ -25,19 +25,29 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
-    <title>Chat</title>
+    <title>My Playlist</title>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root" style="margin: 0 100px;">
-      <h2 style="margin: 20px 0">Chat with a parrot</h2>
-    <div 
-      id="chatWidgetContainer"
-      data-name="Parrot"
-      data-server-url="http://127.0.0.1:5000"
-      >
+    <div class="playlistSection">
+      <h1 id="pageTitle">My playlists</h1>
+      <div id="playlistRow">
+        
+      </div>
     </div>
+    <div class="chatSection">
+      <div id="root" style="margin: 0 100px;">
+        <div 
+          id="chatWidgetContainer"
+          data-name="MusicBot"
+          data-server-url="http://127.0.0.1:5000"
+          data-use-feedback
+          data-use-login
+          >
+        </div>
+      </div>
     </div>
+
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.
@@ -48,5 +58,120 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
+    <script>
+      function renderPlaylists(username, playlists) {
+        const playlistRow = document.getElementById("playlistRow");
+
+        // Clear any previous content
+        playlistRow.innerHTML = "";
+
+        playlists.forEach(playlist => {
+          // Create a div for each playlist
+          const playlistDiv = document.createElement("div");
+          playlistDiv.classList.add("playlist-item");
+
+          // Create a title for the playlist
+          const playlistTitle = document.createElement("h2");
+          playlistTitle.textContent = playlist.name;
+          playlistDiv.appendChild(playlistTitle);
+
+          // Create a delete button for each playlist
+          const deleteButton = document.createElement("button");
+          deleteButton.textContent = "Delete";
+          deleteButton.onclick = () => deletePlaylist(username, playlist.name);  // Call deletePlaylist when clicked
+          playlistDiv.appendChild(deleteButton);
+
+          // Create a div to hold the songs in the playlist
+          const songsList = document.createElement("ul");
+
+          playlist.songs.forEach(song => {
+              const songItem = document.createElement("li");
+
+              // Build the song details (title, artist, year) and delete button
+              songItem.innerHTML = `
+                <strong>${song.title}</strong> - ${song.artist || "Unknown"} (${song.year || "Unknown"}) 
+                <button onclick="deleteSong('${username}', '${playlist.name}', '${song.title}')">Remove</button>
+              `;
+
+              // Append the song item to the songs list
+              songsList.appendChild(songItem);
+          });
+
+
+          // Append the songs list to the playlist div
+          playlistDiv.appendChild(songsList);
+
+          // Append the playlist div to the playlistRow
+          playlistRow.appendChild(playlistDiv);
+        });
+      }
+
+      // Fetch playlists data from the server
+      async function fetchPlaylists(username) {
+        try {
+          const response = await fetch(`http://127.0.0.1:5001/playlists/${username}`, {  // Backticks for template literal
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+
+          const data = await response.json();
+          renderPlaylists(username, data);
+        } catch (error) {
+          console.error("Error fetching playlists:", error);
+        }
+      }
+
+      async function deletePlaylist(username, playlistName) {
+        try {
+          const response = await fetch(`http://127.0.0.1:5001/playlists/${username}/${playlistName}`, {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+
+          // After successful deletion, fetch the playlists again to refresh the view
+          fetchPlaylists(username);  // Replace 'erik' with the actual username
+        } catch (error) {
+          console.error("Error deleting playlist:", error);
+        }
+      }
+
+      async function deleteSong(username, playlistName, songTitle) {
+        try {
+          const response = await fetch(`http://127.0.0.1:5001/playlists/${username}/${playlistName}/songs/${songTitle}`, {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+
+          // After successful deletion, fetch the playlists again to refresh the view
+          fetchPlaylists(username);  // Replace 'erik' with the actual username
+        } catch (error) {
+          console.error("Error deleting playlist:", error);
+        }
+      }
+
+      // Call fetchPlaylists when the page loads
+      document.addEventListener("DOMContentLoaded", () => {
+        fetchPlaylists('erik');  // Replace 'erik' with the username you want to fetch
+      });
+
+    </script>
   </body>
 </html>
