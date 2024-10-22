@@ -26,6 +26,35 @@
     -->
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
     <title>My Playlist</title>
+
+    <style>
+      h1 {
+        margin-bottom: 40px !important;
+      }
+      .flex {
+        display: flex;
+      }
+      .flex button {
+        margin-left: 20px;
+      }
+      ul {
+        margin-top: 30px !important;
+      }
+      li button {
+        margin-left: 40px;
+      }
+      td, th {
+        padding-right: 30px;
+      }
+      thead {
+        border-bottom: 1px solid grey !important;
+      }
+      table {
+        margin-top: 30px;
+        margin-bottom: 50px;
+        width: 100%;
+      }
+    </style>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
@@ -42,7 +71,6 @@
           data-name="MusicBot"
           data-server-url="http://127.0.0.1:5000"
           data-use-feedback
-          data-use-login
           >
         </div>
       </div>
@@ -70,36 +98,65 @@
           const playlistDiv = document.createElement("div");
           playlistDiv.classList.add("playlist-item");
 
+          const flexDiv = document.createElement("div");
+          flexDiv.classList.add("flex");
+          playlistDiv.appendChild(flexDiv);
+
           // Create a title for the playlist
           const playlistTitle = document.createElement("h2");
           playlistTitle.textContent = playlist.name;
-          playlistDiv.appendChild(playlistTitle);
+          flexDiv.appendChild(playlistTitle);
 
           // Create a delete button for each playlist
           const deleteButton = document.createElement("button");
-          deleteButton.textContent = "Delete";
+          deleteButton.textContent = "Delete Playlist";
           deleteButton.onclick = () => deletePlaylist(username, playlist.name);  // Call deletePlaylist when clicked
-          playlistDiv.appendChild(deleteButton);
+          flexDiv.appendChild(deleteButton);
 
-          // Create a div to hold the songs in the playlist
-          const songsList = document.createElement("ul");
+          const tableList = document.createElement("table");
+          const tableHeader = document.createElement("thead");
+          const tableBody = document.createElement("tbody");
+          const tableHeaderRow = document.createElement("tr")
+          const thTitleSong = document.createElement("th");
+          thTitleSong.innerHTML = 'Song Name'
+          const thTitleArtist = document.createElement("th");
+          thTitleArtist.innerHTML = 'Song Artist'
+          const thTitleYear = document.createElement("th");
+          thTitleYear.innerHTML = 'Release Year'
+          const thTitleRemove = document.createElement("th");
+          thTitleRemove.innerHTML = 'Remove'
+
+          tableHeaderRow.appendChild(thTitleSong);
+          tableHeaderRow.appendChild(thTitleArtist);
+          tableHeaderRow.appendChild(thTitleYear);
+          tableHeaderRow.appendChild(thTitleRemove);
+          tableHeader.appendChild(tableHeaderRow);
 
           playlist.songs.forEach(song => {
-              const songItem = document.createElement("li");
+              var button = `<button onclick="deleteSong('${username}', '${playlist.name}', '${song.title}')">Remove Song</button>`
 
-              // Build the song details (title, artist, year) and delete button
-              songItem.innerHTML = `
-                <strong>${song.title}</strong> - ${song.artist || "Unknown"} (${song.year || "Unknown"}) 
-                <button onclick="deleteSong('${username}', '${playlist.name}', '${song.title}')">Remove</button>
-              `;
+              const songRow = document.createElement("tr");
+              const thSongName = document.createElement("td");
+              thSongName.innerHTML = song.title;
+              const thArtist = document.createElement("td");
+              thArtist.innerHTML = song.artist || "Unknown";
+              const thYear = document.createElement("td");
+              thYear.innerHTML = song.year || "Unknown";
+              const thRemove = document.createElement("td");
+              thRemove.innerHTML = button;
+
+              songRow.appendChild(thSongName);
+              songRow.appendChild(thArtist);
+              songRow.appendChild(thYear);
+              songRow.appendChild(thRemove);
 
               // Append the song item to the songs list
-              songsList.appendChild(songItem);
+              tableBody.appendChild(songRow);
           });
 
-
-          // Append the songs list to the playlist div
-          playlistDiv.appendChild(songsList);
+          tableList.appendChild(tableHeader);
+          tableList.appendChild(tableBody);
+          playlistDiv.appendChild(tableList);
 
           // Append the playlist div to the playlistRow
           playlistRow.appendChild(playlistDiv);
@@ -171,6 +228,16 @@
       document.addEventListener("DOMContentLoaded", () => {
         fetchPlaylists('erik');  // Replace 'erik' with the username you want to fetch
       });
+
+      function pollServer() {
+          setInterval(() => {
+              fetchPlaylists('erik');
+          }, 1000);  // Poll every 5 seconds
+      }
+
+      // Start polling the server
+      pollServer();
+
 
     </script>
   </body>

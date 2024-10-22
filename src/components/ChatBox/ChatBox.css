@@ -19,4 +19,6 @@
   overflow-y: auto;
   display: flex;
   flex-direction: column-reverse;
+  white-space: pre-wrap;
+  word-wrap: break-word;
  }
