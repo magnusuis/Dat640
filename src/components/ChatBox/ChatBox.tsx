@@ -122,8 +122,35 @@ export default function ChatBox() {
 
   useEffect(() => {
     onMessage((message: ChatMessage) => {
-      handelMessage(message);
-      handleButtons(message);
+      
+      if (message.text?.includes("{'text':")) {
+        const jsonString = message.text?.replace(/'/g, '"');
+
+        if(jsonString) {
+          const parsedObject = JSON.parse(jsonString);
+
+          // Map parsed object to the TypeScript types
+          const chatMessage: ChatMessage = {
+            text: parsedObject.text,
+            attachments: parsedObject.attachments?.map((attachment: any) => ({
+              type: attachment.type,
+              payload: {
+                buttons: attachment.payload.buttons.map((button: any) => ({
+                  title: button.title,
+                  payload: button.payload,
+                  button_type: button.button_type,
+                })),
+              },
+            })),
+          };
+
+          handelMessage(chatMessage);
+          handleButtons(chatMessage);
+        }
+      } else {
+        handelMessage(message);
+        handleButtons(message);
+      }
     });
   }, [onMessage, handleButtons, handelMessage]);
 
